@@ -1,0 +1,40 @@
+[env]
+HOST = "0.0.0.0"
+PORT = 18080
+
+[tasks.set-env-docker.env]
+
+
+[tasks.set-env-local.env]
+
+
+[tasks.before-build]
+
+
+[tasks.run-in-docker]
+extend = "set-env-docker"
+dependencies = ["before-build"]
+command = "podman-compose"
+args = ["up", "-d", "app"]
+
+[tasks.log]
+extend = "set-env-docker"
+dependencies = ["before-build"]
+command = "podman-compose"
+args = ["logs", "${@}"]
+
+# podman-compose
+[tasks.compose-down]
+extend = "set-env-docker"
+command = "podman-compose"
+args = ["down"]
+
+[tasks.compose-remove]
+extend = "set-env-docker"
+command = "podman-compose"
+args = ["down", "-v"]
+
+[tasks.compose-ps]
+extend = "set-env-docker"
+command = "podman-compose"
+args = ["ps"]
