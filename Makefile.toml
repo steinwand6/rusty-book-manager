@@ -1,15 +1,27 @@
 [env]
 HOST = "0.0.0.0"
 PORT = 18080
+DATABASE_USER = "app"
+DATABASE_PASSWORD = "passwd"
+DATABASE_NAME = "app"
+DATABASE_PORT_INNER = "5432"
+DATABASE_PORT_OUTER = "5432"
 
 [tasks.set-env-docker.env]
-
+DATABASE_HOST = "postgres"
 
 [tasks.set-env-local.env]
-
+DATABASE_HOST = "localhost"
+DATABASE_URL = "postgresql://${DATABASE_HOST}:${DATABASE_PORT_OUTER}/${DATABASE_NAME}?user=${DATABASE_USER}&password=${DATABASE_PASSWORD}"
 
 [tasks.before-build]
+run_task = [{ name = ["compose-up-db"] }]
 
+[tasks.run]
+extend = "set-env-local"
+dependencies = ["before-build"]
+command = "cargo"
+"args" = ["run", "${@}"]
 
 [tasks.run-in-docker]
 extend = "set-env-docker"
@@ -43,3 +55,8 @@ args = ["down", "-v"]
 extend = "set-env-docker"
 command = "podman-compose"
 args = ["ps"]
+
+[tasks.compose-up-db]
+extend = "set-env-docker"
+command = "podman-compose"
+args = ["up", "-d", "postgres"]
