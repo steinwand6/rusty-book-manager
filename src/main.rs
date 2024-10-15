@@ -7,13 +7,7 @@ use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let options = PgConnectOptions::new()
-        .host("localhost")
-        .port(5432)
-        .username("app")
-        .password("passwd")
-        .database("app");
-    let db_pool = PgPool::connect_lazy_with(options);
+    let db_pool = get_db_connection();
 
     let app = Router::new()
         .route("/health", get(health_check))
@@ -22,10 +16,19 @@ async fn main() -> Result<()> {
 
     let addr = SocketAddr::new(Ipv4Addr::LOCALHOST.into(), 8080);
     let listener = TcpListener::bind(addr).await?;
-
     println!("Listening on {addr}");
 
     Ok(axum::serve(listener, app).await?)
+}
+
+fn get_db_connection() -> PgPool {
+    let options = PgConnectOptions::new()
+        .host("localhost")
+        .port(5432)
+        .username("app")
+        .password("passwd")
+        .database("app");
+    PgPool::connect_lazy_with(options)
 }
 
 async fn health_check() -> StatusCode {
