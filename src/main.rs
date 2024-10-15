@@ -19,3 +19,16 @@ async fn main() -> Result<()> {
 async fn health_check() -> StatusCode {
     StatusCode::OK
 }
+
+#[cfg(test)]
+mod test {
+    use axum::http::StatusCode;
+
+    use crate::health_check;
+
+    #[tokio::test]
+    async fn health_check_works() {
+        let status_code = health_check().await;
+        assert_eq!(status_code, StatusCode::OK);
+    }
+}

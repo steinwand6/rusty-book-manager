@@ -23,6 +23,11 @@ dependencies = ["before-build"]
 command = "podman-compose"
 args = ["logs", "${@}"]
 
+[tasks.test]
+extend = "set-env-local"
+command = "cargo"
+args = ["nextest", "run"]
+
 # podman-compose
 [tasks.compose-down]
 extend = "set-env-docker"
