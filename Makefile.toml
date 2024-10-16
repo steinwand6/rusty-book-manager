@@ -51,12 +51,20 @@ command = "cargo"
 args = ["fmt", "--all", "${@}"]
 
 # for CI
+[tasks.before-build-ci]
+run_task = [{ name = ["compose-up-db-ci"] }]
+
+[tasks.compose-up-db-ci]
+extend = "set-env-docker"
+command = "docker"
+args = ["compose", "up", "-d", "postgres"]
+
 [tasks.clippy-ci]
-dependencies = ["before-build"]
+dependencies = ["before-build-ci"]
 run_task = "clippy"
 
 [tasks.test-ci]
-dependencies = ["before-build"]
+dependencies = ["before-build-ci"]
 run_task = "test"
 
 # podman-compose
