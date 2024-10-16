@@ -15,10 +15,10 @@ services:
     volumes:
       - db:/var/lib/postgres/data
     ports:
-      - "5432:5432"
+      - "${DATABASE_PORT_OUTER}:${DATABASE_PORT_INNER}"
     command: postgres -c log_destination=stderr -c log_statement=all -c log_connections=on -c log_disconnections=on
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "app" ]
+      test: [ "CMD", "pg_isready", "-U", "${DATABASE_USER}" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
