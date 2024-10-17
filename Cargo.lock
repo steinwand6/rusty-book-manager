@@ -5,6 +5,11 @@ version = 3
 [[package]]
 name = "adapter"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "shared",
+ "sqlx",
+]
 
 [[package]]
 name = "addr2line"
@@ -1227,6 +1232,9 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
 
 [[package]]
 name = "shlex"

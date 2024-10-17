@@ -2,12 +2,15 @@ use std::net::{Ipv4Addr, SocketAddr};
 
 use anyhow::Result;
 use axum::{extract::State, http::StatusCode, routing::get, Router};
-use sqlx::{postgres::PgConnectOptions, PgPool};
+use sqlx::PgPool;
 use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let db_pool = get_db_connection();
+    let config = shared::config::AppConfig::new()?;
+
+    // TODO: Refactor creation to use API layer functions instead of directly calling adapter layer functions
+    let db_pool = adapter::database::get_db_connection(&config.database);
 
     let app = Router::new()
         .route("/health", get(health_check))
@@ -19,16 +22,6 @@ async fn main() -> Result<()> {
     println!("Listening on {addr}");
 
     Ok(axum::serve(listener, app).await?)
-}
-
-fn get_db_connection() -> PgPool {
-    let options = PgConnectOptions::new()
-        .host("localhost")
-        .port(5432)
-        .username("app")
-        .password("passwd")
-        .database("app");
-    PgPool::connect_lazy_with(options)
 }
 
 async fn health_check() -> StatusCode {
