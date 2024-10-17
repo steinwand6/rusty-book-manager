@@ -10,7 +10,12 @@ path = "src/bin/app.rs"
 [workspace]
 members = ["api", "kernel", "adapter", "shared", "registry"]
 
-[dependencies]
+[workspace.dependencies]
+adapter = { path = "./adapter" }
+api = { path = "./api" }
+kernel = { path = "kernel" }
+shared = { path = "shared" }
+registry = { path = "registry" }
 anyhow = "1.0.89"
 axum = { version = "0.7.7", features = ["macros"] }
 sqlx = { version = "0.8.2", features = [
@@ -22,3 +27,13 @@ sqlx = { version = "0.8.2", features = [
     "migrate",
 ] }
 tokio = { version = "1.40.0", features = ["full"] }
+
+[dependencies]
+adapter.workspace = true
+api.workspace = true
+shared.workspace = true
+registry.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+axum.workspace = true
+sqlx.workspace = true
