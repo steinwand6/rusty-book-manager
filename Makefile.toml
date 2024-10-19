@@ -21,7 +21,7 @@ DATABASE_PORT = "${DATABASE_PORT_OUTER}"
 DATABASE_URL = "postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?user=${DATABASE_USER}&password=${DATABASE_PASSWORD}"
 
 [tasks.before-build]
-run_task = [{ name = ["compose-up-db"] }]
+run_task = [{ name = ["compose-up-db", "migrate"] }]
 
 [tasks.run]
 extend = "set-env-local"
@@ -55,6 +55,13 @@ args = ["clippy", "--all", "--all-targets", "${@}"]
 extend = "set-env-local"
 command = "cargo"
 args = ["fmt", "--all", "${@}"]
+
+[tasks.build]
+extend = "set-env-docker"
+dependencies = ["before-build"]
+command = "cargo"
+args = ["build", "${@}"]
+
 
 # for CI
 [tasks.before-build-ci]
@@ -93,3 +100,55 @@ args = ["ps"]
 extend = "set-env-docker"
 command = "podman-compose"
 args = ["up", "-d", "postgres"]
+
+# sqlx
+[tasks.migrate]
+extend = "set-end-local"
+intall_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
+script = '''
+#!/bin/bash
+until sqlx migrate run --source adapter/migrations; do
+  sleep 1
+done
+'''
+
+[tasks.sqlx]
+extend = "set-env-local"
+intall_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
+command = "sqlx"
+args = ["${@}", "--source", "adapter/migrations"]
+
+[tasks.psql]
+extend = "set-env-local"
+command = "podman"
+args = [
+    "run",
+    "-it",
+    "--rm",
+    "--network",
+    "host",
+    "-v",
+    "${PWD}:/work",
+    "postgres:15",
+    "psql",
+    "${DATABASE_URL}",
+    "${@}",
+]
+
+[tasks.initial-setup]
+extend = "set-env-local"
+command = "podman"
+args = [
+    "run",
+    "-it",
+    "--rm",
+    "--network",
+    "host",
+    "-v",
+    "${PWD}:/work",
+    "postgres:15",
+    "psql",
+    "${DATABASE_URL}",
+    "-f",
+    "/work/data/initial_setup.sql",
+]
