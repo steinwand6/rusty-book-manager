@@ -104,7 +104,7 @@ args = ["up", "-d", "postgres"]
 # sqlx
 [tasks.migrate]
 extend = "set-end-local"
-intall_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
+install_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
 script = '''
 #!/bin/bash
 until sqlx migrate run --source adapter/migrations; do
@@ -114,7 +114,7 @@ done
 
 [tasks.sqlx]
 extend = "set-env-local"
-intall_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
+install_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
 command = "sqlx"
 args = ["${@}", "--source", "adapter/migrations"]
 
