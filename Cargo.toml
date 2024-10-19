@@ -27,12 +27,15 @@ sqlx = { version = "0.8.2", features = [
     "migrate",
 ] }
 tokio = { version = "1.40.0", features = ["full"] }
+async-trait = "0.1.83"
+derive-new = "0.7.0"
 
 [dependencies]
 adapter.workspace = true
 api.workspace = true
 shared.workspace = true
 registry.workspace = true
+async-trait.workspace = true
 anyhow.workspace = true
 tokio.workspace = true
 axum.workspace = true

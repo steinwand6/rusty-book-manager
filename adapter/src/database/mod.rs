@@ -1,13 +1,24 @@
-use sqlx::{postgres::PgConnectOptions, PgPool};
-
 use shared::config::DatabaseConfig;
+use sqlx::postgres::{PgConnectOptions, PgPool};
 
-pub fn get_db_connection(cfg: &DatabaseConfig) -> PgPool {
-    let options = PgConnectOptions::new()
+#[derive(Clone)]
+pub struct ConnectionPool(PgPool);
+
+impl ConnectionPool {
+    pub fn inner_ref(&self) -> &PgPool {
+        &self.0
+    }
+}
+
+pub fn connect_database_with(cfg: &DatabaseConfig) -> ConnectionPool {
+    ConnectionPool(PgPool::connect_lazy_with(make_pg_connect_option(cfg)))
+}
+
+fn make_pg_connect_option(cfg: &DatabaseConfig) -> PgConnectOptions {
+    PgConnectOptions::new()
         .host(&cfg.host)
         .port(cfg.port)
         .username(&cfg.username)
         .password(&cfg.password)
-        .database(&cfg.database);
-    PgPool::connect_lazy_with(options)
+        .database(&cfg.database)
 }
