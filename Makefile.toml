@@ -103,7 +103,7 @@ args = ["up", "-d", "postgres"]
 
 # sqlx
 [tasks.migrate]
-extend = "set-end-local"
+extend = "set-env-local"
 install_crate = { crate_name = "sqlx-cli", binary = "sqlx", test_arg = "--help" }
 script = '''
 #!/bin/bash
