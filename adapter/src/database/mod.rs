@@ -1,7 +1,10 @@
+use derive_new::new;
 use shared::config::DatabaseConfig;
 use sqlx::postgres::{PgConnectOptions, PgPool};
 
-#[derive(Clone)]
+pub mod model;
+
+#[derive(Clone, new)]
 pub struct ConnectionPool(PgPool);
 
 impl ConnectionPool {

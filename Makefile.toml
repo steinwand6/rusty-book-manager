@@ -44,7 +44,14 @@ args = ["logs", "${@}"]
 [tasks.test]
 extend = "set-env-local"
 command = "cargo"
-args = ["nextest", "run", "--status-level", "all", "--test-threads=1"]
+args = [
+  "nextest",
+  "run",
+  "--status-level",
+  "all",
+  "--test-threads=1",
+  "--workspace",
+]
 
 [tasks.clippy]
 extend = "set-env-local"
@@ -122,33 +129,33 @@ args = ["${@}", "--source", "adapter/migrations"]
 extend = "set-env-local"
 command = "podman"
 args = [
-    "run",
-    "-it",
-    "--rm",
-    "--network",
-    "host",
-    "-v",
-    "${PWD}:/work",
-    "postgres:15",
-    "psql",
-    "${DATABASE_URL}",
-    "${@}",
+  "run",
+  "-it",
+  "--rm",
+  "--network",
+  "host",
+  "-v",
+  "${PWD}:/work",
+  "postgres:15",
+  "psql",
+  "${DATABASE_URL}",
+  "${@}",
 ]
 
 [tasks.initial-setup]
 extend = "set-env-local"
 command = "podman"
 args = [
-    "run",
-    "-it",
-    "--rm",
-    "--network",
-    "host",
-    "-v",
-    "${PWD}:/work",
-    "postgres:15",
-    "psql",
-    "${DATABASE_URL}",
-    "-f",
-    "/work/data/initial_setup.sql",
+  "run",
+  "-it",
+  "--rm",
+  "--network",
+  "host",
+  "-v",
+  "${PWD}:/work",
+  "postgres:15",
+  "psql",
+  "${DATABASE_URL}",
+  "-f",
+  "/work/data/initial_setup.sql",
 ]
