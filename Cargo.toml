@@ -31,7 +31,9 @@ async-trait = "0.1.83"
 derive-new = "0.7.0"
 uuid = { version = "1.11.0", features = ["v4", "serde"] }
 serde = { version = "1.0.210", features = ["derive"] }
+strum = { version = "0.26.3", features = ["derive"] }
 thiserror = "1.0.64"
+tracing = { version = "0.1.40", features = ["log"] }
 
 [dependencies]
 adapter.workspace = true
@@ -43,3 +45,6 @@ anyhow.workspace = true
 tokio.workspace = true
 axum.workspace = true
 sqlx.workspace = true
+strum.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3.18", features = ["env-filter", "json"] }
