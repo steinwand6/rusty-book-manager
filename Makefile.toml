@@ -72,7 +72,7 @@ args = ["build", "${@}"]
 
 # for CI
 [tasks.before-build-ci]
-run_task = [{ name = ["compose-up-db-ci"] }]
+run_task = [{ name = ["compose-up-db-ci", "migrate"] }]
 
 [tasks.compose-up-db-ci]
 extend = "set-env-docker"
