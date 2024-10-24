@@ -3,7 +3,7 @@ use axum::{
     http::StatusCode,
     Json,
 };
-use uuid::Uuid;
+use kernel::model::id::BookId;
 
 use registry::AppRegistory;
 use shared::error::{AppError, AppResult};
@@ -35,7 +35,7 @@ pub async fn show_book_list(
 }
 
 pub async fn show_book(
-    Path(book_id): Path<Uuid>,
+    Path(book_id): Path<BookId>,
     State(registry): State<AppRegistory>,
 ) -> AppResult<Json<BookResponse>> {
     registry

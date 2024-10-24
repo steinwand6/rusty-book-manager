@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use derive_new::new;
 use kernel::model::book::{event::CreateBook, Book};
+use kernel::model::id::BookId;
 use kernel::repository::book::BookRepository;
 use shared::error::{AppError, AppResult};
 
@@ -51,7 +52,7 @@ impl BookRepository for BookRepositoryImpl {
         Ok(rows.into_iter().map(Book::from).collect())
     }
 
-    async fn find_by_id(&self, book_id: sqlx::types::Uuid) -> AppResult<Option<Book>> {
+    async fn find_by_id(&self, book_id: BookId) -> AppResult<Option<Book>> {
         let row: Option<BookRow> = sqlx::query_as!(
             BookRow,
             r#"
@@ -62,7 +63,7 @@ impl BookRepository for BookRepositoryImpl {
             WHERE
                 book_id = $1
         "#,
-            book_id
+            book_id as _
         )
         .fetch_optional(self.db.inner_ref())
         .await
