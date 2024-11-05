@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       network: host
+
   postgres:
     image: postgres:15
     container_name: postgres
@@ -23,6 +24,11 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+
+  redis:
+    image: redis:alpine
+    ports:
+      - ${REDIS_PORT_OUTER}:${REDIS_PORT_INNER}
 
 volumes:
   db:

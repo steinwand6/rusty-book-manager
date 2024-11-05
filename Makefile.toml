@@ -9,19 +9,25 @@ DATABASE_PASSWORD = "passwd"
 DATABASE_NAME = "app"
 DATABASE_PORT_INNER = "5432"
 DATABASE_PORT_OUTER = "5432"
+REDIS_PORT_INNER = "6379"
+REDIS_PORT_OUTER = "6379"
 
 [tasks.set-env-docker.env]
 DATABASE_HOST = "postgres"
 DATABASE_PORT = "${DATABASE_PORT_INNER}"
 DATABASE_URL = "postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?user=${DATABASE_USER}&password=${DATABASE_PASSWORD}"
+REDIS_HOST = "redis"
+REDIS_PORT = "${REDIS_PORT_INNER}"
 
 [tasks.set-env-local.env]
 DATABASE_HOST = "localhost"
 DATABASE_PORT = "${DATABASE_PORT_OUTER}"
 DATABASE_URL = "postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?user=${DATABASE_USER}&password=${DATABASE_PASSWORD}"
+REDIS_HOST = "redis"
+REDIS_PORT = "${REDIS_PORT_OUTER}"
 
 [tasks.before-build]
-run_task = [{ name = ["compose-up-db", "migrate"] }]
+run_task = [{ name = ["compose-up-db", "migrate", "compose-up-redis"] }]
 
 [tasks.run]
 extend = "set-env-local"
@@ -72,12 +78,17 @@ args = ["build", "${@}"]
 
 # for CI
 [tasks.before-build-ci]
-run_task = [{ name = ["compose-up-db-ci", "migrate"] }]
+run_task = [{ name = ["compose-up-db-ci", "migrate", "compose-up-redis-ci"] }]
 
 [tasks.compose-up-db-ci]
 extend = "set-env-docker"
 command = "docker"
 args = ["compose", "up", "-d", "postgres"]
+
+[tasks.compose-up-redis-ci]
+extend = "set-env-docker"
+command = "docker"
+args = ["compose", "up", "-d", "redis"]
 
 [tasks.clippy-ci]
 dependencies = ["before-build-ci"]
@@ -107,6 +118,11 @@ args = ["ps"]
 extend = "set-env-docker"
 command = "podman-compose"
 args = ["up", "-d", "postgres"]
+
+[tasks.compose-up-redis]
+extend = "set-env-docker"
+command = "podman-compose"
+args = ["up", "-d", "redis"]
 
 # sqlx
 [tasks.migrate]
