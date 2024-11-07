@@ -12,3 +12,4 @@ garde.workspace = true
 sqlx.workspace = true
 tracing.workspace = true
 uuid.workspace = true
+redis.workspace = true

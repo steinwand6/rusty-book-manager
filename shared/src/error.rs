@@ -25,6 +25,8 @@ pub enum AppError {
     ForbiddenOperation,
     #[error("{0}")]
     ConversionEntityError(String),
+    #[error("{0}")]
+    KeyValueStoreError(#[from] redis::RedisError),
 }
 
 impl IntoResponse for AppError {
@@ -40,6 +42,7 @@ impl IntoResponse for AppError {
             e @ (AppError::TransactionError(_)
             | AppError::SpecificOperationError(_)
             | AppError::NoRowAffetedError(_)
+            | AppError::KeyValueStoreError(_)
             | AppError::ConversionEntityError(_)) => {
                 tracing::error!(error.cause_chain = ?e, error.message = %e, "Unexpected error happened");
                 StatusCode::INTERNAL_SERVER_ERROR
