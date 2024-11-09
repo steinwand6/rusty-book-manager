@@ -27,6 +27,8 @@ pub enum AppError {
     ConversionEntityError(String),
     #[error("{0}")]
     KeyValueStoreError(#[from] redis::RedisError),
+    #[error("{0}")]
+    BcryptError(#[from] bcrypt::BcryptError),
 }
 
 impl IntoResponse for AppError {
@@ -43,7 +45,8 @@ impl IntoResponse for AppError {
             | AppError::SpecificOperationError(_)
             | AppError::NoRowAffetedError(_)
             | AppError::KeyValueStoreError(_)
-            | AppError::ConversionEntityError(_)) => {
+            | AppError::ConversionEntityError(_)
+            | AppError::BcryptError(_)) => {
                 tracing::error!(error.cause_chain = ?e, error.message = %e, "Unexpected error happened");
                 StatusCode::INTERNAL_SERVER_ERROR
             }

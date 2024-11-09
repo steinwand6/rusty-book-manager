@@ -36,6 +36,7 @@ thiserror = "1.0.64"
 tracing = { version = "0.1.40", features = ["log"] }
 garde = { version = "0.20.0", features = ["derive", "email"] }
 redis = { version = "0.27.5", features = ["tokio-rustls-comp"] }
+bcrypt = "0.15.1"
 
 [dependencies]
 adapter.workspace = true
@@ -52,3 +53,4 @@ strum.workspace = true
 tracing.workspace = true
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "json"] }
 garde.workspace = true
+bcrypt.workspace = true

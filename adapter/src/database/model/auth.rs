@@ -66,7 +66,7 @@ impl TryFrom<String> for AuthorizedUserId {
 }
 
 impl AuthorizedUserId {
-    pub fn into_inner(&self) -> UserId {
+    pub fn into_inner(self) -> UserId {
         self.0
     }
 }
