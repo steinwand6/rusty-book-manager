@@ -9,8 +9,8 @@ INSERT INTO
     users(name, email, password_hash, role_id)
 SELECT
     'Eleazar Fig',
-    'eleazar.fig.example.com',
-    '$2b$12$IH7j9rGMOPL2nK.qbKJkbOb6jccbfELmAlCXX5TBQiLPzw8oojiqm',
+    'eleazar.fig@example.com',
+    '$2b$12$sJV9c1dkikNyYKIT7j81deeexC4HLVn5ZJnpf1s8W9/kmwAfxv8KW',
     role_id
 FROM
     roles
