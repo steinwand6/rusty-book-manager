@@ -12,3 +12,4 @@ axum.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 uuid.workspace = true
+axum-extra.workspace = true
